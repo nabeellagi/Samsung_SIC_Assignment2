@@ -36,11 +36,9 @@ def setup_mqtt():
     print("Connected to Ubidots MQTT broker")
     return client
 
-# Main execution
 connect_wifi()
 client = setup_mqtt()
 
-# Timers
 motion_publish_interval = 2
 sum_motion_publish_interval = 60
 send_api_interval = 40
@@ -55,7 +53,6 @@ while True:
 
     sum_motion += (motion1 + motion2)
 
-    # LED feedback based on either PIR sensor detecting motion
     if motion1 or motion2:
         print("Motion detected! Turning on LED.")
         LED.value(1)
@@ -63,13 +60,11 @@ while True:
         print("No motion detected. Turning off LED.")
         LED.value(0)
 
-    # Publish motion1 and motion2 every 5 seconds
     if motion_timer >= motion_publish_interval:
         send_to_ubidots(client, motion1, motion2)
         
         motion_timer = 0  # Reset motion timer
 
-    # Publish sum_motion every 60 seconds
     if sum_motion_timer >= sum_motion_publish_interval:
         send_to_ubidots(client, motion1, motion2, sum_motion)
         
@@ -87,5 +82,5 @@ while True:
     motion_timer += 1
     sum_motion_timer += 1
     send_api_timer += 1
-    sleep(1)  # Wait before next reading
+    sleep(1)  
 
